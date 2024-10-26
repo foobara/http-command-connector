@@ -8,7 +8,11 @@ Gem::Specification.new do |spec|
 
   spec.summary = "No description. Add one."
   spec.homepage = "https://github.com/foobara/http-command-connector"
-  spec.license = "None specified yet"
+
+  # Equivalent to SPDX License Expression: Apache-2.0 OR MIT
+  spec.license = "Apache-2.0 OR MIT"
+  spec.licenses = ["Apache-2.0", "MIT"]
+
   spec.required_ruby_version = ">= #{File.read("#{__dir__}/.ruby-version")}"
 
   spec.metadata["homepage_uri"] = spec.homepage
