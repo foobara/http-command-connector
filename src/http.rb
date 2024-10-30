@@ -5,7 +5,7 @@ module Foobara
 
       attr_accessor :prefix
 
-      def initialize(prefix:, **)
+      def initialize(prefix: nil, **)
         if prefix
           if prefix.is_a?(::Array)
             prefix = prefix.join("/")

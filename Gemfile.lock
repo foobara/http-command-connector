@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    foobara-http-command-connector (0.0.2)
+    foobara-http-command-connector (0.0.3)
       foobara
 
 GEM
