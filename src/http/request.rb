@@ -13,6 +13,7 @@ module Foobara
                       :host,
                       :port,
                       :cookies,
+                      :prefix,
                       :remote_ip,
                       :response_headers
 
@@ -26,7 +27,8 @@ module Foobara
           host: nil,
           port: nil,
           cookies: nil,
-          remote_ip: nil
+          remote_ip: nil,
+          prefix: nil
         )
           self.path = path
           self.method = method
@@ -38,6 +40,7 @@ module Foobara
           self.port = port
           self.cookies = cookies
           self.remote_ip = remote_ip
+          self.prefix = prefix
 
           super()
         end
@@ -86,11 +89,23 @@ module Foobara
         end
 
         def argument
-          path.split("/")[2]
+          prefixless_path.split("/")[2]
         end
 
         def set_action_and_command_name
-          @action, @full_command_name = path[1..].split("/")
+          @action, @full_command_name = prefixless_path[1..].split("/")
+        end
+
+        def prefixless_path
+          return @prefixless_path if defined?(@prefixless_path)
+
+          prefix = self.prefix
+
+          @prefixless_path = if prefix
+                               path.gsub(/^#{prefix}\//, "/")
+                             else
+                               path
+                             end
         end
       end
     end

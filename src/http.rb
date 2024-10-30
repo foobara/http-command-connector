@@ -3,6 +3,33 @@ module Foobara
     class Http < CommandConnector
       include TruncatedInspect
 
+      attr_accessor :prefix
+
+      def initialize(prefix:, **)
+        if prefix
+          if prefix.is_a?(::Array)
+            prefix = prefix.join("/")
+          end
+
+          if prefix.end_with?("/")
+            prefix = prefix[0..-2]
+          end
+
+          unless prefix.start_with?("/")
+            prefix = "/#{prefix}"
+          end
+
+          self.prefix = prefix
+
+        end
+
+        super(**)
+      end
+
+      def run(*, **)
+        super(*, prefix:, **)
+      end
+
       def request_to_command(context)
         if context.method == "OPTIONS"
           # TODO: this feels a bit hacky and like overkill...

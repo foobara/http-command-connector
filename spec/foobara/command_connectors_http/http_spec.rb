@@ -49,8 +49,9 @@ RSpec.describe Foobara::CommandConnectors::Http do
   end
 
   let(:command_connector) do
-    described_class.new(authenticator:, default_serializers:)
+    described_class.new(authenticator:, default_serializers:, prefix:)
   end
+  let(:prefix) { nil }
 
   let(:command_registry) { command_connector.command_registry }
 
@@ -189,6 +190,29 @@ RSpec.describe Foobara::CommandConnectors::Http do
       expect(response.status).to be(200)
       expect(response.headers).to be_a(Hash)
       expect(response.body).to eq("8")
+    end
+
+    context "with a prefix" do
+      let(:prefix) { %w[foo bar baz] }
+
+      let(:path) { "/foo/bar/baz/run/ComputeExponent" }
+
+      it "runs the command" do
+        expect(response.status).to be(200)
+        expect(response.headers).to be_a(Hash)
+        expect(response.body).to eq("8")
+      end
+
+      context "when prefix has a superfluous /" do
+        let(:prefix) { "foo/" }
+        let(:path) { "/foo/run/ComputeExponent" }
+
+        it "runs the command" do
+          expect(response.status).to be(200)
+          expect(response.headers).to be_a(Hash)
+          expect(response.body).to eq("8")
+        end
+      end
     end
 
     context "with a header set via env var..." do

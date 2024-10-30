@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    foobara-http-command-connector (0.0.1)
+    foobara-http-command-connector (0.0.2)
       foobara
 
 GEM
@@ -50,7 +50,7 @@ GEM
       foobara-type-generator
       foobara-typescript-react-command-form-generator
       foobara-typescript-remote-command-generator
-    foobara (0.0.10)
+    foobara (0.0.11)
       foobara-util
     foobara-autocrud-generator (0.0.1)
       foobara
@@ -95,7 +95,7 @@ GEM
     foobara-rubocop-rules (0.0.4)
       rubocop
       rubocop-rspec
-    foobara-sh-cli-connector (0.0.4)
+    foobara-sh-cli-connector (0.0.6)
       foobara
     foobara-sh-cli-connector-generator (0.0.2)
       foobara
@@ -114,7 +114,7 @@ GEM
       foobara-files-generator
     foobara-util (0.0.6)
     formatador (1.1.0)
-    guard (2.18.1)
+    guard (2.19.0)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
       lumberjack (>= 1.0.12, < 2.0)
@@ -129,7 +129,7 @@ GEM
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
     hashdiff (1.1.1)
-    json (2.7.4)
+    json (2.7.5)
     language_server-protocol (3.17.0.3)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -185,7 +185,7 @@ GEM
       rubocop-ast (>= 1.32.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.32.3)
+    rubocop-ast (1.33.0)
       parser (>= 3.3.1.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
