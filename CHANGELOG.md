@@ -1,3 +1,8 @@
+## [0.0.5] - 2024-12-01
+
+- Fix default serializers bug
+- Change default serializer from JsonSerializer to AtomicSerializer
+
 ## [0.0.3] - 2024-10-30
 
 - Support path prefixes
