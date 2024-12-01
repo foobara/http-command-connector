@@ -5,7 +5,15 @@ module Foobara
 
       attr_accessor :prefix
 
-      def initialize(prefix: nil, **)
+      def initialize(
+        prefix: nil,
+        default_serializers: [
+          Foobara::CommandConnectors::Serializers::ErrorsSerializer,
+          Foobara::CommandConnectors::Serializers::AtomicSerializer,
+          Foobara::CommandConnectors::Serializers::JsonSerializer
+        ],
+        **
+      )
         if prefix
           if prefix.is_a?(::Array)
             prefix = prefix.join("/")
@@ -20,10 +28,9 @@ module Foobara
           end
 
           self.prefix = prefix
-
         end
 
-        super(**)
+        super(default_serializers:, **)
       end
 
       def run(*, **)
