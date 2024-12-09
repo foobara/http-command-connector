@@ -1,3 +1,5 @@
+require "pathname"
+
 require_relative "presenter/command"
 require_relative "presenter/entity"
 require_relative "presenter/error"

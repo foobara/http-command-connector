@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    foobara-http-command-connector (0.0.7)
+    foobara-http-command-connector (0.0.8)
       foobara
 
 GEM
@@ -34,7 +34,7 @@ GEM
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
     ffi (1.17.0-x86_64-linux-musl)
-    foob (0.0.6)
+    foob (0.0.7)
       foobara
       foobara-autocrud-generator
       foobara-command-generator
@@ -48,7 +48,7 @@ GEM
       foobara-remote-imports-generator
       foobara-resque-connector-generator
       foobara-resque-scheduler-connector-generator
-      foobara-sh-cli-connector
+      foobara-sh-cli-connector (~> 0.0.10)
       foobara-sh-cli-connector-generator
       foobara-type-generator
       foobara-typescript-react-command-form-generator
@@ -99,7 +99,7 @@ GEM
     foobara-rubocop-rules (0.0.5)
       rubocop
       rubocop-rspec
-    foobara-sh-cli-connector (0.0.9)
+    foobara-sh-cli-connector (0.0.10)
       foobara
     foobara-sh-cli-connector-generator (0.0.2)
       foobara

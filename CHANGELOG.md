@@ -1,5 +1,6 @@
-## [0.0.7] - 2024-12-09
+## [0.0.8] - 2024-12-09
 
+- Make sure to require pathname when needed
 - Upgrade to newer foobara gem with detached entity concept
 
 ## [0.0.6] - 2024-12-01
