@@ -1241,6 +1241,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
                 associative_array
                 atomic_duck
                 attributes
+                detached_entity
                 duck
                 duckture
                 entity

@@ -22,7 +22,8 @@ module Foobara
                   Presenter::Root
                 when Manifest::Command
                   Presenter::Command
-                when Manifest::Entity
+                  # TODO: do we need a dedicated presenter for this??
+                when Manifest::Entity, Manifest::DetachedEntity
                   Presenter::Entity
                 when Manifest::Model
                   Presenter::Model

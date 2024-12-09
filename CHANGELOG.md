@@ -1,3 +1,7 @@
+## [0.0.7] - 2024-12-09
+
+- Upgrade to newer foobara gem with detached entity concept
+
 ## [0.0.6] - 2024-12-01
 
 - Fix default serializers bug
