@@ -1,3 +1,7 @@
+## [0.0.10] - 2025-01-25
+
+- Allow default_serializers to be changed
+
 ## [0.0.9] - 2025-01-07
 
 - Bump Ruby to 3.4.1

@@ -3,15 +3,21 @@ module Foobara
     class Http < CommandConnector
       include TruncatedInspect
 
+      class << self
+        attr_accessor :default_serializers
+      end
+
+      self.default_serializers = [
+        Foobara::CommandConnectors::Serializers::ErrorsSerializer,
+        Foobara::CommandConnectors::Serializers::AtomicSerializer,
+        Foobara::CommandConnectors::Serializers::JsonSerializer
+      ]
+
       attr_accessor :prefix
 
       def initialize(
         prefix: nil,
-        default_serializers: [
-          Foobara::CommandConnectors::Serializers::ErrorsSerializer,
-          Foobara::CommandConnectors::Serializers::AtomicSerializer,
-          Foobara::CommandConnectors::Serializers::JsonSerializer
-        ],
+        default_serializers: self.class.default_serializers,
         **
       )
         if prefix
