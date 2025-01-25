@@ -1305,4 +1305,21 @@ RSpec.describe Foobara::CommandConnectors::Http do
       end
     end
   end
+
+  describe ".default_serializers" do
+    it "returns some serializers" do
+      expect(described_class.default_serializers).to be_an(Array)
+    end
+
+    context "when a subclass" do
+      let(:subclass) do
+        stub_class :SomeSubclass, described_class
+      end
+
+      it "returns some serializers" do
+        expect(subclass.default_serializers).to be_an(Array)
+        expect(subclass.default_serializers).to_not be_empty
+      end
+    end
+  end
 end

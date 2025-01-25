@@ -4,14 +4,24 @@ module Foobara
       include TruncatedInspect
 
       class << self
-        attr_accessor :default_serializers
-      end
+        attr_writer :default_serializers
 
-      self.default_serializers = [
-        Foobara::CommandConnectors::Serializers::ErrorsSerializer,
-        Foobara::CommandConnectors::Serializers::AtomicSerializer,
-        Foobara::CommandConnectors::Serializers::JsonSerializer
-      ]
+        def default_serializers
+          return @default_serializers if @default_serializers
+
+          if superclass.respond_to?(:default_serializers)
+            serializers = superclass.default_serializers
+
+            return serializers if serializers
+          end
+
+          @default_serializers = [
+            Foobara::CommandConnectors::Serializers::ErrorsSerializer,
+            Foobara::CommandConnectors::Serializers::AtomicSerializer,
+            Foobara::CommandConnectors::Serializers::JsonSerializer
+          ]
+        end
+      end
 
       attr_accessor :prefix
 

@@ -1,4 +1,4 @@
-## [0.0.10] - 2025-01-25
+## [0.0.11] - 2025-01-25
 
 - Allow default_serializers to be changed
 
