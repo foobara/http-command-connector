@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    foobara-http-command-connector (0.0.11)
+    foobara-http-command-connector (0.0.12)
       foobara
 
 GEM
@@ -54,7 +54,7 @@ GEM
       foobara-type-generator
       foobara-typescript-react-command-form-generator
       foobara-typescript-remote-command-generator
-    foobara (0.0.50)
+    foobara (0.0.51)
       bigdecimal
       foobara-util
     foobara-autocrud-generator (0.0.1)
@@ -80,7 +80,7 @@ GEM
       foobara-files-generator
     foobara-files-generator (0.0.5)
       foobara
-    foobara-local-files-crud-driver-generator (0.0.2)
+    foobara-local-files-crud-driver-generator (0.0.3)
       foobara
       foobara-files-generator
     foobara-organization-generator (0.0.2)
@@ -141,7 +141,7 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     hashdiff (1.1.2)
     json (2.9.1)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.4)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -198,7 +198,7 @@ GEM
       rubocop-ast (>= 1.36.2, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.37.0)
+    rubocop-ast (1.38.0)
       parser (>= 3.3.1.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)

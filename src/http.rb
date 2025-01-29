@@ -9,10 +9,15 @@ module Foobara
         def default_serializers
           return @default_serializers if @default_serializers
 
-          if superclass.respond_to?(:default_serializers)
-            serializers = superclass.default_serializers
+          superklass = superclass
+          serializers = nil
+
+          while superklass.respond_to?(:default_serializers)
+            serializers = superclass.instance_variable_get(:@default_serializers)
 
             return serializers if serializers
+
+            superklass = superklass.superclass
           end
 
           @default_serializers = [

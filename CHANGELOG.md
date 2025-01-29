@@ -1,3 +1,7 @@
+## [0.0.12] - 2025-01-28
+
+- Fix potential issue with default serializer inheritance/overriding
+
 ## [0.0.11] - 2025-01-25
 
 - Allow default_serializers to be changed

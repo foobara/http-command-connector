@@ -57,7 +57,8 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
   let(:authenticator) { nil }
   let(:default_serializers) do
-    [Foobara::CommandConnectors::Serializers::ErrorsSerializer, Foobara::CommandConnectors::Serializers::JsonSerializer]
+    [Foobara::CommandConnectors::Serializers::ErrorsSerializer,
+     Foobara::CommandConnectors::Serializers::JsonSerializer]
   end
   let(:default_pre_commit_transformer) { nil }
 
@@ -650,7 +651,9 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
         context "with AggregateSerializer" do
           let(:serializers) { Foobara::CommandConnectors::Serializers::AggregateSerializer }
-          let(:pre_commit_transformers) { Foobara::CommandConnectors::Transformers::LoadAggregatesPreCommitTransformer }
+          let(:pre_commit_transformers) {
+            Foobara::CommandConnectors::Transformers::LoadAggregatesPreCommitTransformer
+          }
 
           context "when user exists with a referral" do
             let(:command_class) do
@@ -1319,6 +1322,17 @@ RSpec.describe Foobara::CommandConnectors::Http do
       it "returns some serializers" do
         expect(subclass.default_serializers).to be_an(Array)
         expect(subclass.default_serializers).to_not be_empty
+      end
+
+      context "when subclass of a subclass" do
+        let(:subsubclass) do
+          stub_class :SomeSubsubclass, subclass
+        end
+
+        it "returns some serializers" do
+          expect(subsubclass.default_serializers).to be_an(Array)
+          expect(subsubclass.default_serializers).to_not be_empty
+        end
       end
     end
   end
