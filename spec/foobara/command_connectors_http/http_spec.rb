@@ -154,6 +154,21 @@ RSpec.describe Foobara::CommandConnectors::Http do
             expect(manifest[:organization].keys).to match_array(%i[SomeOrg global_organization])
             expect(manifest[:command][:"SomeOrg::SomeDomain::SomeCommand"][:description]).to eq("just some command")
           end
+
+          context "when generating manifest via Describe" do
+            let(:request) { described_class::Request.new(path: "/manifest") }
+
+            it "includes the organization" do
+              manifest = described_class::Commands::Describe.run!(
+                manifestable: command_connector,
+                request:,
+                detached: false
+              )
+
+              expect(manifest[:organization].keys).to match_array(%i[SomeOrg global_organization])
+              expect(manifest[:command][:"SomeOrg::SomeDomain::SomeCommand"][:description]).to eq("just some command")
+            end
+          end
         end
       end
     end
@@ -965,6 +980,8 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
     context "with describe path" do
       let(:path) { "/describe/ComputeExponent" }
+      let(:query_string) { "" }
+      let(:body) { "" }
 
       it "describes the command" do
         expect(response.status).to be(200)

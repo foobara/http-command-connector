@@ -1,3 +1,7 @@
+## [0.0.14] - 2025-02-02
+
+- Put manifest into detached context by default
+
 ## [0.0.12] - 2025-01-28
 
 - Fix potential issue with default serializer inheritance/overriding
