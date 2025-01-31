@@ -1,3 +1,7 @@
+## [0.0.13] - 2025-01-30
+
+- Make sure manifest is ran in detached context
+
 ## [0.0.12] - 2025-01-28
 
 - Fix potential issue with default serializer inheritance/overriding
