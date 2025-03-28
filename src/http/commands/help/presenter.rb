@@ -173,7 +173,9 @@ module Foobara
             end
 
             def respond_to_missing?(method_name, include_private = false)
+              # :nocov:
               manifest.respond_to?(method_name, include_private)
+              # :nocov:
             end
           end
         end
