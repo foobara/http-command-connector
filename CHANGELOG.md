@@ -1,3 +1,8 @@
+## [0.0.15] - 2025-03-28
+
+- Implement MoveAttributeToCookie response mutator
+- Decouple Help command from html serialization
+
 ## [0.0.14] - 2025-02-02
 
 - Put manifest into detached context by default
