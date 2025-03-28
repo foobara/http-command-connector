@@ -41,6 +41,8 @@ module Foobara
                   Presenter::Processor
                 when Manifest::ProcessorClass
                   Presenter::ProcessorClass
+                when ErrorCollection
+                  Presenter::RequestFailed
                 else
                   # :nocov:
                   raise "No presenter found for #{manifest.path}"

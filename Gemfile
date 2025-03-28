@@ -5,6 +5,8 @@ ruby Foobara::HttpCommandConnector::MINIMUM_RUBY_VERSION
 
 gemspec
 
+gem "foobara", path: "../foobara"
+
 gem "foobara-dotenv-loader"
 
 gem "rake"
@@ -20,6 +22,9 @@ end
 group :development, :test do
   gem "pry"
   gem "pry-byebug"
+  # TODO: Just adding this to suppress warnings seemingly coming from pry-byebug. Can probably remove this once
+  # pry-byebug has irb as a gem dependency
+  gem "irb"
 end
 
 group :test do
