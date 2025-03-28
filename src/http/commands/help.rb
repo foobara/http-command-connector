@@ -3,23 +3,20 @@ module Foobara
     class Http < CommandConnector
       module Commands
         class Help < Command
-          description "Will extract items from the request to help with. Assumes the help is desired in HTML format"
+          description "Will extract items from the request to help with"
           inputs request: Http::Request
-          result :string
+          result :duck
           possible_error CommandConnector::NotFoundError
 
           def execute
             load_manifest
             determine_object_to_help_with
-            build_presenter
-            load_template
-            generate_html_from_template
-            set_header_to_html
+            set_manifest_to_help_with
 
-            html
+            manifest_to_help_with
           end
 
-          attr_accessor :raw_manifest, :root_manifest, :object_to_help_with, :template, :html, :presenter
+          attr_accessor :raw_manifest, :root_manifest, :object_to_help_with, :manifest_to_help_with
 
           def load_manifest
             self.raw_manifest = command_connector.foobara_manifest
@@ -35,6 +32,7 @@ module Foobara
               if result
                 self.object_to_help_with = result
               else
+                # TODO: we should look up from the command connector's namespace instead, right?
                 result = GlobalOrganization.foobara_lookup(arg, mode:)
 
                 if result && root_manifest.contains?(result.foobara_manifest_reference,
@@ -54,38 +52,12 @@ module Foobara
             end
           end
 
-          def build_presenter
-            self.presenter = Help::Presenter.for(manifest_to_help_with)
-          end
-
-          def template_path
-            presenter.template_path
-          end
-
-          def load_template
-            template_body = File.read(template_path)
-
-            erb = ERB.new(template_body)
-            erb.filename = template_path
-
-            self.template = erb
-          end
-
-          def generate_html_from_template
-            self.html = template.result(presenter.instance_eval { binding })
-          end
-
-          def set_header_to_html
-            request.response_headers ||= {}
-            request.response_headers = request.response_headers.merge("content-type" => "text/html")
-          end
-
-          def manifest_to_help_with
-            @manifest_to_help_with ||= if object_to_help_with.is_a?(Manifest::BaseManifest)
-                                         object_to_help_with
-                                       else
-                                         root_manifest.lookup(object_to_help_with.foobara_manifest_reference)
-                                       end
+          def set_manifest_to_help_with
+            self.manifest_to_help_with = if object_to_help_with.is_a?(Manifest::BaseManifest)
+                                           object_to_help_with
+                                         else
+                                           root_manifest.lookup(object_to_help_with.foobara_manifest_reference)
+                                         end
           end
 
           def command_connector

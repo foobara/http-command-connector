@@ -58,57 +58,59 @@ module Foobara
         super(*, prefix:, **)
       end
 
-      def request_to_command(context)
-        if context.method == "OPTIONS"
+      def request_to_command(request)
+        if request.method == "OPTIONS"
           # TODO: this feels a bit hacky and like overkill...
           return Foobara::CommandConnectors::Http::Commands::GetOptions.new
         end
 
         command = super
 
-        if context.action == "help"
-          # Let's unwrap the transformed command to avoid serialization
-          # TODO: maybe instead register Help without serializers?
-          command = command.command
+        # TODO: We should kill these case statements and require connecting these commands
+        if request.action == "help"
+          command.class.serializers = [Commands::Help::ResultSerializer]
         end
 
         command
       end
 
-      def request_to_response(request)
-        command = request.command
+      def set_response_status(response)
+        command = response.command
         outcome = command.outcome
 
-        # TODO: feels awkward to call this here... Maybe use result/errors transformers instead??
-        # Or call the serializer here??
-        body = command.respond_to?(:serialize_result) ? command.serialize_result : outcome.result
+        response.status = if outcome.success?
+                            200
+                          else
+                            errors = outcome.errors
 
-        status = if outcome.success?
-                   200
-                 else
-                   errors = outcome.errors
+                            if errors.size == 1
+                              error = errors.first
 
-                   if errors.size == 1
-                     error = errors.first
+                              case error
+                              when CommandConnector::UnknownError
+                                500
+                              when CommandConnector::NotFoundError, Foobara::Entity::NotFoundError
+                                # TODO: we should not be coupled to Entities here...
+                                404
+                              when CommandConnector::UnauthenticatedError
+                                401
+                              when CommandConnector::NotAllowedError
+                                403
+                              end
+                            end || 422
+                          end
+      end
 
-                     case error
-                     when CommandConnector::UnknownError
-                       500
-                     when CommandConnector::NotFoundError, Foobara::Entity::NotFoundError
-                       # TODO: we should not be coupled to Entities here...
-                       body ||= "Not found"
-                       404
-                     when CommandConnector::UnauthenticatedError
-                       401
-                     when CommandConnector::NotAllowedError
-                       403
-                     end
-                   end || 422
-                 end
+      def mutate_response(response)
+        super
 
-        headers = headers_for(request)
+        headers = headers_for(response.request)
 
-        Response.new(status:, headers:, body:, request:)
+        if headers&.any?
+          response.headers = (response.headers || {}).merge(headers)
+        else
+          response.headers ||= {}
+        end
       end
 
       def headers_for(request)

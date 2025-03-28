@@ -841,14 +841,10 @@ RSpec.describe Foobara::CommandConnectors::Http do
         let(:inputs_transformers) { [inputs_transformer] }
         let(:inputs_transformer) do
           stub_class "SomeTransformer", Foobara::TypeDeclarations::TypedTransformer do
-            class << self
-              def type_declaration(_from_type)
-                {
-                  bbaassee: :string,
-                  exponent: :string
-                }
-              end
-            end
+            from bbaassee: :string,
+                 exponent: :string
+            to base: :integer,
+               exponent: :integer
 
             def transform(inputs)
               inputs = inputs.transform_keys(&:to_sym)
@@ -864,11 +860,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
         let(:result_transformers) { [result_transformer] }
         let(:result_transformer) do
           stub_class :SomeOtherTransformer, Foobara::TypeDeclarations::TypedTransformer do
-            class << self
-              def type_declaration(_from_type)
-                { answer: :string }
-              end
-            end
+            to answer: :string
 
             def transform(result)
               { answer: result.to_s }
@@ -1103,14 +1095,9 @@ RSpec.describe Foobara::CommandConnectors::Http do
       context "when rendering an organization" do
         let(:path) { "/help/SomeOrg" }
 
-        let(:presenter) { response.request.command.presenter }
-
         it "gives some help" do
           expect(response.status).to be(200)
           expect(response.body).to match(/SomeOrg/)
-
-          expect(presenter).to be_a(Foobara::CommandConnectors::Http::Commands::Help::Presenter::Organization)
-          expect(presenter.respond_to?(:organization_name)).to be(true)
         end
       end
 
