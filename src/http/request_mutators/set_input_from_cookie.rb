@@ -8,6 +8,8 @@ module Foobara
           def for(attribute_name, cookie_name = attribute_name)
             subclass = Class.new(self)
 
+            cookie_name = cookie_name.to_s if cookie_name.is_a?(::Symbol)
+
             subclass.attribute_name = attribute_name
             subclass.cookie_name = cookie_name
 
