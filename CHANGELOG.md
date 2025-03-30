@@ -1,3 +1,7 @@
+## [0.0.18] - 2025-03-29
+
+- Implement SetInputsFromHeader request mutator and MoveAttributeToHeader response mutator
+
 ## [0.0.17] - 2025-03-29
 
 - Implement SetInputsFromCookie request mutator
