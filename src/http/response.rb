@@ -19,6 +19,11 @@ module Foobara
         def add_cookie(cookie_name, cookie_value, cookie_opts)
           cookies << Cookie.new(cookie_name, cookie_value, **cookie_opts)
         end
+
+        def add_header(header_name, header_value)
+          self.headers ||= {}
+          headers[header_name] = header_value
+        end
       end
     end
   end
