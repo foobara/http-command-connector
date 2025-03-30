@@ -19,15 +19,16 @@ module Foobara
         attr_writer :attribute_name, :cookie_name, :cookie_opts
 
         def result_type_from(result_type)
-          AttributesTransformers.reject(result_type.declaration_data)
           new_declaration = TypeDeclarations::Attributes.reject(result_type.declaration_data, attribute_name)
 
           Domain.current.foobara_type_from_declaration(new_declaration)
         end
 
         def mutate(response)
-          cookie_value = response.body.delete(attribute_name)
-          response.add_cookie(cookie_name, cookie_value, cookie_opts)
+          if response.command.success?
+            cookie_value = response.body.delete(attribute_name)
+            response.add_cookie(cookie_name, cookie_value, cookie_opts)
+          end
         end
 
         def attribute_name

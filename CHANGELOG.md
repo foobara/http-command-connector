@@ -1,3 +1,7 @@
+## [0.0.16] - 2025-03-28
+
+- 
+
 ## [0.0.15] - 2025-03-28
 
 - Implement MoveAttributeToCookie response mutator
