@@ -86,6 +86,10 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
   describe "#connect" do
     context "when command is in an organization" do
+      let(:path) { "/run/SomeOrg/SomeDomain/SomeCommand" }
+      let(:query_string) { "foo=foovalue" }
+      let(:body) { "" }
+
       let!(:org_module) do
         stub_module :SomeOrg do
           foobara_organization!
@@ -111,6 +115,14 @@ RSpec.describe Foobara::CommandConnectors::Http do
         stub_class "SomeOrg::SomeDomain::SomeCommand", Foobara::Command do
           description "just some command"
           depends_on SomeOtherOrg::SomeOtherDomain::SomeOtherCommand
+
+          inputs foo: :string
+
+          result foo: :string
+
+          def execute
+            inputs
+          end
         end
       end
 
@@ -134,6 +146,12 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
         expect(command_classes).to eq([transformed_command])
         expect(command_registry.all_transformed_command_classes).to eq([transformed_command])
+      end
+
+      it "can run the command" do
+        command_connector.connect(org_module)
+
+        expect(response.status).to be(200)
       end
 
       context "when registering via domain" do
@@ -510,6 +528,10 @@ RSpec.describe Foobara::CommandConnectors::Http do
       end
 
       context "when unauthenticated" do
+        let(:authenticator) do
+          proc {}
+        end
+
         it "is 401" do
           expect(response.status).to be(401)
           expect(response.headers).to be_a(Hash)
@@ -521,7 +543,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
         let(:authenticator) do
           # normally we would return a user but we'll just generate a pointless integer
           # to test proxying to the request
-          proc { path.length }
+          proc { 10 }
         end
 
         it "is 200" do

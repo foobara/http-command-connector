@@ -93,7 +93,9 @@ module Foobara
         end
 
         def set_action_and_command_name
-          @action, @full_command_name = prefixless_path[1..].split("/")
+          @action, *full_command_name = prefixless_path[1..].split("/")
+
+          @full_command_name = full_command_name.join("::").gsub("/", "::")
         end
 
         def prefixless_path
