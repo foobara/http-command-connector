@@ -1,3 +1,8 @@
+## [0.0.19] - 2025-03-31
+
+- Add SetHeader response mutator
+- Use / instead of :: for paths
+
 ## [0.0.18] - 2025-03-29
 
 - Implement SetInputsFromHeader request mutator and MoveAttributeToHeader response mutator
