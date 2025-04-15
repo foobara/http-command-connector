@@ -1,3 +1,7 @@
+## [0.0.20] - 2025-04-14
+
+- Handle more cors scenarios
+
 ## [0.0.19] - 2025-03-31
 
 - Add SetHeader response mutator
