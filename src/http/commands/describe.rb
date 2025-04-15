@@ -14,7 +14,7 @@ module Foobara
           end
 
           def in_detached_context(&)
-            Thread.foobara_with_var("foobara_manifest_context", detached: true, &)
+            TypeDeclarations.with_manifest_context(detached: true, &)
           end
 
           def build_manifest
