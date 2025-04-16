@@ -35,7 +35,7 @@ module Foobara
             allow_headers = ENV.fetch("FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_HEADERS", nil)
             if allow_headers
               if allow_headers == "*"
-                allow_headers = request.headers["HTTP_ACCESS_CONTROL_REQUEST_HEADERS"]
+                allow_headers = request.headers["access-control-request-headers"]
               end
               request.response_headers["access-control-allow-headers"] = allow_headers
             end

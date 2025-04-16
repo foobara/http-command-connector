@@ -1,3 +1,7 @@
+## [0.0.21] - 2025-04-15
+
+- Fix incorrect content-type for help action 
+
 ## [0.0.20] - 2025-04-14
 
 - Handle more cors scenarios

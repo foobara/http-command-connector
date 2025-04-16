@@ -192,7 +192,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
     end
   end
 
-  describe "#run_command" do
+  describe "#run" do
     before do
       if allowed_rules
         command_connector.allowed_rules(allowed_rules)
@@ -853,6 +853,33 @@ RSpec.describe Foobara::CommandConnectors::Http do
         expect(response.status).to be(200)
         expect(response.headers).to be_a(Hash)
         expect(response.body).to eq("8")
+      end
+    end
+
+    context "when handling cors stuff" do
+      let(:method) { "OPTIONS" }
+      let(:headers) do
+        { "access-control-request-headers" => "Content-Type" }
+      end
+
+      stub_env_vars(
+        "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_METHODS" => "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+        "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_HEADERS" => "*",
+        "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_EXPOSE_HEADERS" => "X-Access-Token",
+        "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS" => "true",
+        "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_ORIGIN" => "http://localhost:3000",
+        "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_MAX_AGE" => "3600"
+      )
+
+      it "returns various cors headers" do
+        expect(response.headers).to eq(
+          "access-control-expose-headers" => "X-Access-Token",
+          "access-control-allow-credentials" => "true",
+          "access-control-allow-origin" => "http://localhost:3000",
+          "access-control-allow-methods" => "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+          "access-control-allow-headers" => "Content-Type",
+          "access-control-max-age" => "3600"
+        )
       end
     end
 
