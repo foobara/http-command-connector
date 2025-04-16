@@ -109,6 +109,14 @@ module Foobara
                                path
                              end
         end
+
+        def set_response_header(name, value)
+          name = name.to_s
+          name = name.downcase
+
+          self.response_headers ||= {}
+          self.response_headers = response_headers.merge(name => value)
+        end
       end
     end
   end

@@ -66,6 +66,7 @@ module Foobara
         command = super
 
         if request.action == "help"
+          request.set_response_header("content-type", "text/html")
           command.class.serializers = [Commands::Help::ResultSerializer]
         end
 
