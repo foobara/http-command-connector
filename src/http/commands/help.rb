@@ -44,7 +44,7 @@ module Foobara
                   determine_object_to_help_with(mode: Namespace::LookupMode::RELAXED)
                 else
                   # TODO: add an input error instead for missing record to trigger 404
-                  add_runtime_error(CommandConnector::NotFoundError.new(arg))
+                  add_runtime_error(CommandConnector::NotFoundError.for(arg))
                 end
               end
             else
