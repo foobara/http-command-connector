@@ -24,6 +24,10 @@ module Foobara
           Domain.current.foobara_type_from_declaration(new_declaration)
         end
 
+        def applicable?(request)
+          request.cookies.key?(cookie_name)
+        end
+
         def mutate(request)
           cookie_value = request.cookies[cookie_name]
           request.inputs[attribute_name] = cookie_value

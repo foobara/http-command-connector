@@ -24,11 +24,13 @@ module Foobara
           Domain.current.foobara_type_from_declaration(new_declaration)
         end
 
+        def applicable?(response)
+          response.command.success?
+        end
+
         def mutate(response)
-          if response.command.success?
-            cookie_value = response.body.delete(attribute_name)
-            response.add_cookie(cookie_name, cookie_value, cookie_opts)
-          end
+          cookie_value = response.body.delete(attribute_name)
+          response.add_cookie(cookie_name, cookie_value, cookie_opts)
         end
 
         def attribute_name

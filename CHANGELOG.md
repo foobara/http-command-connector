@@ -1,3 +1,7 @@
+## [0.0.22] - 2025-04-22
+
+- Separate out #applicable? behavior in some mutators
+
 ## [0.0.21] - 2025-04-15
 
 - Fix incorrect content-type for help action 

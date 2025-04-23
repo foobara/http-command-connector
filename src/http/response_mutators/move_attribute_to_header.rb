@@ -22,11 +22,13 @@ module Foobara
           Domain.current.foobara_type_from_declaration(new_declaration)
         end
 
+        def applicable?(response)
+          response.command.success?
+        end
+
         def mutate(response)
-          if response.command.success?
-            header_value = response.body.delete(attribute_name)
-            response.add_header(header_name, header_value)
-          end
+          header_value = response.body.delete(attribute_name)
+          response.add_header(header_name, header_value)
         end
 
         def attribute_name
