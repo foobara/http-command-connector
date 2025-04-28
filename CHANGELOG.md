@@ -1,6 +1,14 @@
-## [0.0.22] - 2025-04-22
+## [0.0.24] - 2025-04-28
+
+- Make sure cookies are looked up by string not symbol
+
+## [0.0.23] - 2025-04-22
 
 - Separate out #applicable? behavior in some mutators
+
+## [0.0.22] - 2025-04-22
+
+- Make use of NotFoundError.for
 
 ## [0.0.21] - 2025-04-15
 

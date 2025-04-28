@@ -30,6 +30,10 @@ module Foobara
           remote_ip: nil,
           prefix: nil
         )
+          if cookies
+            cookies = cookies.transform_keys(&:to_s)
+          end
+
           self.path = path
           self.method = method
           self.headers = headers
