@@ -1,3 +1,7 @@
+## [0.0.25] - 2025-05-01
+
+- Add SetInputToProcResult request transformer
+
 ## [0.0.24] - 2025-04-28
 
 - Make sure cookies are looked up by string not symbol
