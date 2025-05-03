@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    foobara-http-command-connector (0.0.25)
-      foobara (~> 0.0.88)
+    foobara-http-command-connector (0.0.26)
+      foobara (~> 0.0.116)
 
 GEM
   remote: https://rubygems.org/
@@ -35,8 +35,8 @@ GEM
     ffi (1.17.2-x86_64-darwin)
     ffi (1.17.2-x86_64-linux-gnu)
     ffi (1.17.2-x86_64-linux-musl)
-    foob (0.0.13)
-      foobara (~> 0.0.99)
+    foob (0.0.14)
+      foobara (~> 0.0.116)
       foobara-command-generator (~> 0.0.1)
       foobara-domain-generator (~> 0.0.1)
       foobara-domain-mapper-generator (~> 0.0.1)
@@ -55,7 +55,7 @@ GEM
       foobara-type-generator (~> 0.0.1)
       foobara-typescript-react-command-form-generator (~> 0.0.1)
       foobara-typescript-remote-command-generator (~> 0.0.1)
-    foobara (0.0.115)
+    foobara (0.0.116)
       bigdecimal
       foobara-lru-cache (~> 0.0.2)
       foobara-util (~> 0.0.11)
@@ -106,7 +106,7 @@ GEM
     foobara-rubocop-rules (0.0.8)
       rubocop
       rubocop-rspec
-    foobara-sh-cli-connector (0.0.16)
+    foobara-sh-cli-connector (0.0.17)
       foobara (~> 0.0.88)
     foobara-sh-cli-connector-generator (0.0.4)
       foobara-files-generator (~> 0.0.1)

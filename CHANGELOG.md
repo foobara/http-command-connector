@@ -1,3 +1,7 @@
+## [0.0.26] - 2025-05-03
+
+- Deal with CommandConnector interface changes
+
 ## [0.0.25] - 2025-05-01
 
 - Add SetInputToProcResult request transformer

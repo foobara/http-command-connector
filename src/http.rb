@@ -58,24 +58,28 @@ module Foobara
         super(*, prefix:, **)
       end
 
-      def request_to_command(request)
+      def request_to_command_class(request)
         if request.method == "OPTIONS"
-          return Foobara::CommandConnectors::Http::Commands::GetOptions.new(request:)
+          Foobara::CommandConnectors::Http::Commands::GetOptions
+        else
+          super.tap do |command_class|
+            if request.action == "help"
+              command_class.serializers = [Commands::Help::ResultSerializer]
+            end
+          end
         end
+      end
 
-        command = super
-
-        if request.action == "help"
-          request.set_response_header("content-type", "text/html")
-          command.class.serializers = [Commands::Help::ResultSerializer]
+      def request_to_command_inputs(request)
+        if request.method == "OPTIONS"
+          { request: }
+        else
+          super
         end
-
-        command
       end
 
       def set_response_status(response)
-        command = response.command
-        outcome = command.outcome
+        outcome = response.outcome
 
         response.status = if outcome.success?
                             200
@@ -122,6 +126,10 @@ module Foobara
               response_headers = (response_headers || {}).merge("content-type" => "application/json")
             end
           end
+        end
+
+        if request.action == "help"
+          response_headers = (response_headers || {}).merge("content-type" => "text/html")
         end
 
         if response_headers

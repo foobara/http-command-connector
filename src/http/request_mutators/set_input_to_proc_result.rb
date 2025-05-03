@@ -24,6 +24,10 @@ module Foobara
           Domain.current.foobara_type_from_declaration(new_declaration)
         end
 
+        def applicable?(_request)
+          true
+        end
+
         def mutate(request)
           request.inputs[attribute_name] = request.instance_exec(&input_value_proc)
         end
