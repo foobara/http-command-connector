@@ -169,7 +169,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
           it "includes the organization" do
             manifest = command_connector.foobara_manifest
 
-            expect(manifest[:organization].keys).to match_array(%i[SomeOrg global_organization])
+            expect(manifest[:organization].keys).to contain_exactly(:SomeOrg, :global_organization)
             expect(manifest[:command][:"SomeOrg::SomeDomain::SomeCommand"][:description]).to eq("just some command")
           end
 
@@ -183,7 +183,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
                 detached: false
               )
 
-              expect(manifest[:organization].keys).to match_array(%i[SomeOrg global_organization])
+              expect(manifest[:organization].keys).to contain_exactly(:SomeOrg, :global_organization)
               expect(manifest[:command][:"SomeOrg::SomeDomain::SomeCommand"][:description]).to eq("just some command")
             end
           end
@@ -1225,20 +1225,20 @@ RSpec.describe Foobara::CommandConnectors::Http do
       end
 
       context "when rendering a processor" do
-        let(:path) { "/help/email::Transformers::downcase" }
+        let(:path) { "/help/integer::Casters::string" }
 
         it "gives some help" do
           expect(response.status).to be(200)
-          expect(response.body).to match(/email::Transformers::downcase/)
+          expect(response.body).to match(/integer::Casters::string/)
         end
       end
 
       context "when rendering a processor class" do
-        let(:path) { "/help/email::Transformers::Downcase" }
+        let(:path) { "/help/string::SupportedTransformers::Downcase" }
 
         it "gives some help" do
           expect(response.status).to be(200)
-          expect(response.body).to match(/email::Transformers::Downcase/)
+          expect(response.body).to match(/string::SupportedTransformers::Downcase/)
         end
       end
     end
@@ -1290,24 +1290,8 @@ RSpec.describe Foobara::CommandConnectors::Http do
           it "returns metadata about the types referenced in the commands" do
             expect(
               manifest[:type].keys
-            ).to match_array(
-              %i[
-                User
-                array
-                associative_array
-                atomic_duck
-                attributes
-                detached_entity
-                duck
-                duckture
-                entity
-                integer
-                model
-                number
-                string
-                symbol
-              ]
-            )
+            ).to contain_exactly(:User, :array, :associative_array, :atomic_duck, :attributes, :detached_entity, :duck,
+                                 :duckture, :entity, :integer, :model, :number, :string, :symbol)
           end
 
           context "with manifest path" do
