@@ -10,7 +10,7 @@ PATH
 PATH
   remote: .
   specs:
-    foobara-http-command-connector (0.0.26)
+    foobara-http-command-connector (0.1.0)
       foobara (>= 0.1.0, < 2.0.0)
 
 GEM
