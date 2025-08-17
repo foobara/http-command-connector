@@ -37,7 +37,7 @@ RSpec.describe Foobara::CommandConnectors::Http::SetInputToProcResult do
     expect(manifest[:command][:SomeCommand][:inputs_type]).to eq(
       type: :attributes,
       element_type_declarations: {
-        bar: { type: :string }
+        bar: :string
       }
     )
   end
