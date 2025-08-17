@@ -125,18 +125,24 @@ module Foobara
                 html << render_html_list({ element_type: data.element_type }, skip_wrapper: true)
                 html << "</ul>" unless skip_wrapper
               when Manifest::TypeDeclaration
-                html << "<ul>" unless skip_wrapper
-                data.relevant_manifest.each_pair do |key, value|
-                  if key.to_s == "type"
-                    value = root_manifest.lookup_path(key, value)
+                manifest = data.relevant_manifest
+
+                if manifest.is_a?(::Symbol)
+                  html << foobara_reference_link(data.to_type)
+                else
+                  html << "<ul>" unless skip_wrapper
+                  data.relevant_manifest.each_pair do |key, value|
+                    if key.to_s == "type"
+                      value = root_manifest.lookup_path(key, value)
+                    end
+                    html << "<li>#{key}"
+                    html << "<ul>"
+                    html << render_html_list(value, skip_wrapper: true)
+                    html << "</ul>"
+                    html << "</li>"
                   end
-                  html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
-                  html << "</li>"
+                  html << "</ul>" unless skip_wrapper
                 end
-                html << "</ul>" unless skip_wrapper
               when Manifest::Type, Manifest::Command, Manifest::Error
                 html << foobara_reference_link(data)
               when Manifest::PossibleError

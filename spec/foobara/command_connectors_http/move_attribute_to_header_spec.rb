@@ -33,7 +33,7 @@ RSpec.describe Foobara::CommandConnectors::Http::MoveAttributeToHeader do
     expect(manifest[:command][:SomeCommand][:result_type]).to eq(
       type: :attributes,
       element_type_declarations: {
-        bar: { type: :string }
+        bar: :string
       }
     )
   end

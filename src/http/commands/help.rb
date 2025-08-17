@@ -31,21 +31,13 @@ module Foobara
 
               if result
                 self.object_to_help_with = result
+              elsif mode == Namespace::LookupMode::ABSOLUTE
+                determine_object_to_help_with(mode: Namespace::LookupMode::GENERAL)
+              elsif mode == Namespace::LookupMode::GENERAL
+                determine_object_to_help_with(mode: Namespace::LookupMode::RELAXED)
               else
-                # TODO: we should look up from the command connector's namespace instead, right?
-                result = GlobalOrganization.foobara_lookup(arg, mode:)
-
-                if result && root_manifest.contains?(result.foobara_manifest_reference,
-                                                     result.scoped_category)
-                  self.object_to_help_with = result
-                elsif mode == Namespace::LookupMode::ABSOLUTE
-                  determine_object_to_help_with(mode: Namespace::LookupMode::GENERAL)
-                elsif mode == Namespace::LookupMode::GENERAL
-                  determine_object_to_help_with(mode: Namespace::LookupMode::RELAXED)
-                else
-                  # TODO: add an input error instead for missing record to trigger 404
-                  add_runtime_error(CommandConnector::NotFoundError.for(arg))
-                end
+                # TODO: add an input error instead for missing record to trigger 404
+                add_runtime_error(CommandConnector::NotFoundError.for(arg))
               end
             else
               self.object_to_help_with = root_manifest

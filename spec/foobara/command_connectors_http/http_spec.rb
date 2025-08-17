@@ -227,7 +227,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
     end
 
     context "with a prefix" do
-      let(:prefix) { %w[foo bar baz] }
+      let(:prefix) { ["foo", "bar", "baz"] }
 
       let(:path) { "/foo/bar/baz/run/ComputeExponent" }
 
@@ -936,14 +936,14 @@ RSpec.describe Foobara::CommandConnectors::Http do
             expect(inputs_type).to eq(
               type: :attributes,
               element_type_declarations: {
-                exponent: { type: :string },
-                bbaassee: { type: :string }
+                exponent: :string,
+                bbaassee: :string
               }
             )
             expect(result_type).to eq(
               type: :attributes,
               element_type_declarations: {
-                answer: { type: :string }
+                answer: :string
               }
             )
             expect(error_types).to eq(
@@ -970,7 +970,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
                 processor_manifest_data: {
                   casting: { cast_to: { type: :attributes,
                                         element_type_declarations: {
-                                          bbaassee: { type: :string }, exponent: { type: :string }
+                                          bbaassee: :string, exponent: :string
                                         } } }
                 }
               },
@@ -980,8 +980,8 @@ RSpec.describe Foobara::CommandConnectors::Http do
                 key: "data.unexpected_attributes",
                 error: "attributes::SupportedProcessors::ElementTypeDeclarations::UnexpectedAttributesError",
                 processor_class: "attributes::SupportedProcessors::ElementTypeDeclarations",
-                processor_manifest_data: { element_type_declarations: { bbaassee: { type: :string },
-                                                                        exponent: { type: :string } } }
+                processor_manifest_data: { element_type_declarations: { bbaassee: :string,
+                                                                        exponent: :string } }
               },
               "data.bbaassee.cannot_cast" => {
                 path: [:bbaassee],
@@ -989,7 +989,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
                 symbol: :cannot_cast,
                 key: "data.bbaassee.cannot_cast",
                 error: "Foobara::Value::Processor::Casting::CannotCastError",
-                processor_manifest_data: { casting: { cast_to: { type: :string } } }
+                processor_manifest_data: { casting: { cast_to: :string } }
               },
               "data.exponent.cannot_cast" => {
                 path: [:exponent],
@@ -997,7 +997,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
                 symbol: :cannot_cast,
                 key: "data.exponent.cannot_cast",
                 error: "Foobara::Value::Processor::Casting::CannotCastError",
-                processor_manifest_data: { casting: { cast_to: { type: :string } } }
+                processor_manifest_data: { casting: { cast_to: :string } }
               }
             )
           end
@@ -1027,7 +1027,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
       it "describes the command" do
         expect(response.status).to be(200)
         json = JSON.parse(response.body)
-        expect(json["inputs_type"]["element_type_declarations"]["base"]["type"]).to eq("integer")
+        expect(json["inputs_type"]["element_type_declarations"]["base"]).to eq("integer")
       end
 
       context "with describe path" do
@@ -1036,7 +1036,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
         it "describes the command" do
           expect(response.status).to be(200)
           json = JSON.parse(response.body)
-          expect(json["inputs_type"]["element_type_declarations"]["base"]["type"]).to eq("integer")
+          expect(json["inputs_type"]["element_type_declarations"]["base"]).to eq("integer")
         end
       end
     end
@@ -1093,7 +1093,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
       context "when it is something accessible through GlobalOrganization but not the connector" do
         before do
-          Foobara::GlobalDomain.foobara_register_type(%w[Foo Bar whatever], :string, :downcase)
+          Foobara::GlobalDomain.foobara_register_type(["Foo", "Bar", "whatever"], :string, :downcase)
           command_connector.connect(new_command)
         end
 
@@ -1250,7 +1250,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
         it "returns metadata about the commands" do
           expect(
             manifest[:command][:ComputeExponent][:result_type]
-          ).to eq(type: :integer)
+          ).to eq(:integer)
         end
 
         context "with an entity input" do
