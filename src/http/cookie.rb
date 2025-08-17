@@ -4,7 +4,7 @@ module Foobara
       class Cookie
         attr_accessor :name, :value, :opts
 
-        ALLOWED_OPTIONS = %i[path httponly secure same_site domain expires max_age].freeze
+        ALLOWED_OPTIONS = [:path, :httponly, :secure, :same_site, :domain, :expires, :max_age].freeze
 
         def initialize(name, value, **opts)
           invalid_options = opts.keys - ALLOWED_OPTIONS

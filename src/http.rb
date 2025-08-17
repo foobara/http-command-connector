@@ -143,10 +143,10 @@ module Foobara
 
       def static_headers
         @static_headers ||= ENV.each_with_object({}) do |(key, value), headers|
-          next if %w[
-            FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_HEADERS
-            FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_METHODS
-            FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_MAX_AGE
+          next if [
+            "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_HEADERS",
+            "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_ALLOW_METHODS",
+            "FOOBARA_HTTP_RESPONSE_HEADER_ACCESS_CONTROL_MAX_AGE"
           ].include?(key)
 
           match = key.match(/\AFOOBARA_HTTP_RESPONSE_HEADER_(.*)\z/)

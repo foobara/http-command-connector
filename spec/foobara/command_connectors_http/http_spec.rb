@@ -227,7 +227,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
     end
 
     context "with a prefix" do
-      let(:prefix) { %w[foo bar baz] }
+      let(:prefix) { ["foo", "bar", "baz"] }
 
       let(:path) { "/foo/bar/baz/run/ComputeExponent" }
 
@@ -1093,7 +1093,7 @@ RSpec.describe Foobara::CommandConnectors::Http do
 
       context "when it is something accessible through GlobalOrganization but not the connector" do
         before do
-          Foobara::GlobalDomain.foobara_register_type(%w[Foo Bar whatever], :string, :downcase)
+          Foobara::GlobalDomain.foobara_register_type(["Foo", "Bar", "whatever"], :string, :downcase)
           command_connector.connect(new_command)
         end
 
