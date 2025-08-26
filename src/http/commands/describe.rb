@@ -6,29 +6,18 @@ module Foobara
           inputs do
             manifestable :duck
             request :duck
-            detached :boolean, default: true
+            detached :boolean, default: false
+            include_processors :boolean, default: false
           end
 
           def stamp_request_metadata
             manifest[:metadata] = super.merge(url: request.url)
           end
 
-          def in_detached_context(&)
-            TypeDeclarations.with_manifest_context(detached: true, &)
-          end
-
           def build_manifest
-            if detached_context?
-              in_detached_context do
-                super
-              end
-            else
+            TypeDeclarations.with_manifest_context(detached:, include_processors:) do
               super
             end
-          end
-
-          def detached_context?
-            detached
           end
         end
       end

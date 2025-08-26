@@ -751,9 +751,9 @@ RSpec.describe Foobara::CommandConnectors::Http do
             it "contains pre_commit_transformers in its manifest" do
               command_manifest = command_connector.foobara_manifest[:command][:QueryUser]
               manifest = command_manifest[:pre_commit_transformers].find { |h|
-                h[:name] == "Foobara::CommandConnectors::Transformers::LoadAggregatesPreCommitTransformer"
+                h == "Foobara::CommandConnectors::Transformers::LoadAggregatesPreCommitTransformer"
               }
-              expect(manifest).to be_a(Hash)
+              expect(manifest).to be_a(String)
               expect(command_manifest[:serializers]).to include(
                 "Foobara::CommandConnectors::Serializers::AggregateSerializer"
               )
@@ -779,9 +779,9 @@ RSpec.describe Foobara::CommandConnectors::Http do
               it "contains pre_commit_transformers in its manifest" do
                 command_manifest = command_connector.foobara_manifest[:command][:QueryUser]
                 manifest = command_manifest[:pre_commit_transformers].find { |h|
-                  h[:name] == "Foobara::CommandConnectors::Transformers::LoadAggregatesPreCommitTransformer"
+                  h == "Foobara::CommandConnectors::Transformers::LoadAggregatesPreCommitTransformer"
                 }
-                expect(manifest).to be_a(Hash)
+                expect(manifest).to be_a(String)
                 expect(command_manifest[:serializers]).to include(
                   "Foobara::CommandConnectors::Serializers::AggregateSerializer"
                 )
@@ -924,7 +924,11 @@ RSpec.describe Foobara::CommandConnectors::Http do
         end
 
         describe "#manifest" do
-          let(:manifest) { command_connector.foobara_manifest }
+          let(:manifest) do
+            Foobara::TypeDeclarations.with_manifest_context(include_processors: true) do
+              command_connector.foobara_manifest
+            end
+          end
 
           it "uses types from the transformers" do
             h = manifest[:command][:ComputeExponent]

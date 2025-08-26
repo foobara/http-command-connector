@@ -19,7 +19,9 @@ module Foobara
           attr_accessor :raw_manifest, :root_manifest, :object_to_help_with, :manifest_to_help_with
 
           def load_manifest
-            self.raw_manifest = command_connector.foobara_manifest
+            self.raw_manifest = TypeDeclarations.with_manifest_context(include_processors: true) do
+              command_connector.foobara_manifest
+            end
             self.root_manifest = Manifest::RootManifest.new(raw_manifest)
           end
 

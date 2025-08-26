@@ -1,3 +1,8 @@
+## [1.1.1] - 2025-08-25
+
+- Add support for including processors
+- Make detached false by default instead of true
+
 ## [1.1.0] - 2025-08-22
 
 - Handle new Foobara 0.1.0 type declarations
