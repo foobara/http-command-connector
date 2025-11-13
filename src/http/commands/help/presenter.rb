@@ -157,7 +157,7 @@ module Foobara
             def foobara_reference_link(manifest)
               path = "/help/#{manifest.reference}"
 
-              "<a href=\"#{path}\">#{manifest.reference.split("::").last}</a>"
+              "<li> <a href=\"#{path}\">#{manifest.reference.split("::").last}</a> </li>"
             end
 
             def root_manifest
