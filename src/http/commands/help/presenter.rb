@@ -128,7 +128,9 @@ module Foobara
                 manifest = data.relevant_manifest
 
                 if manifest.is_a?(::Symbol)
+                  html << "<li>"
                   html << foobara_reference_link(data.to_type)
+                  html << "</li>"
                 else
                   html << "<ul>" unless skip_wrapper
                   data.relevant_manifest.each_pair do |key, value|
@@ -144,7 +146,9 @@ module Foobara
                   html << "</ul>" unless skip_wrapper
                 end
               when Manifest::Type, Manifest::Command, Manifest::Error
+                html << "<li>"
                 html << foobara_reference_link(data)
+                html << "</li>"
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
@@ -157,7 +161,7 @@ module Foobara
             def foobara_reference_link(manifest)
               path = "/help/#{manifest.reference}"
 
-              "<li><a href=\"#{path}\">#{manifest.reference.split("::").last}</a></li>"
+              "<a href=\"#{path}\">#{manifest.reference.split("::").last}</a>"
             end
 
             def root_manifest
