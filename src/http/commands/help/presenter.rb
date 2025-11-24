@@ -77,7 +77,7 @@ module Foobara
               when ::Hash
                 html << "<ul>" unless skip_wrapper
                 data.each do |key, value|
-                  html << "<li>#{key}"
+                  html << "<li><strong>#{key} </strong>"
                   html << "<ul>"
                   html << render_html_list(value, skip_wrapper: true)
                   html << "</ul>"
@@ -137,24 +137,30 @@ module Foobara
                     if key.to_s == "type"
                       value = root_manifest.lookup_path(key, value)
                     end
-                    html << "<li>#{key}"
-                    html << "<ul>"
+                    html << "<li><strong>#{key}: </strong>"
                     html << render_html_list(value, skip_wrapper: true)
-                    html << "</ul>"
                     html << "</li>"
                   end
                   html << "</ul>" unless skip_wrapper
                 end
-              when Manifest::Type, Manifest::Command, Manifest::Error
+              when Manifest::Type
+                html << foobara_reference_link(data)
+              when Manifest::Command
                 html << "<li>"
+                html << foobara_reference_link(data)
+                html << "</li>"
+              when Manifest::Error
+                html << "<li>"
+                html << "<strong>Error: </strong>"
                 html << foobara_reference_link(data)
                 html << "</li>"
               when Manifest::PossibleError
                 html << render_html_list(data.error)
+              when String
+                html << data
               else
                 html << "<li>#{data}</li>"
               end
-
               html
             end
 
