@@ -70,46 +70,66 @@ module Foobara
               self.manifest = manifest
             end
 
-            def render_html_list(data, skip_wrapper: false)
+            def render_html_parent(data)
+              # This function is the parent function of render_html_list just to eliminate the skip_wrapper mechanism.
+              # This function eliminates the need to use <ul> tags in the render_html_list function calls.
+              # Note that we are making some calls on render_html_list function but eliminating the need for skip_wrapper.
               html = ""
+              case data
+                when ::Hash
+                  html << "<ul>"
+                  data.each do |key,value|
+                    html << "<li>"
+                    html << "<strong>#{key}: </strong>"
+                    html << foobara_reference_link(value.error)
+                    html << "</li>"
+                  end
+                  html << "</ul>"
+                when Manifest::Attributes
+                  html << "<ul>"
+                  data.relevant_manifest.each_pair do |key, value|
+                    if key.to_s == "type"
+                      next
+                    end
+                    if key.to_s == "element_type_declarations"
+                      key = :attributes
+                      value = data.attribute_declarations
+                    end
+                    html << "<li>"
+                    html << "<strong>#{key}: </strong>"
+                    html << "<ul>"
+                    html << render_html_list(value)
+                    html << "</ul>"
+                    html << "</li>"
+                  end
+                  html << "</ul>"
+                when Manifest::TypeDeclaration
+                  manifest = data.relevant_manifest
+                  if manifest.is_a?(::Symbol)
+                    html << "<strong>Result Type: </strong>"
+                    html << foobara_reference_link(data.to_type)
+                  end
+                    
+              end
+              html
+            end
 
+            def render_html_list(data)
+              html = ""
               case data
               when ::Hash
-                html << "<ul>" unless skip_wrapper
                 data.each do |key, value|
                   html << "<li><strong>#{key} </strong>"
                   html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
+                  html << render_html_list(value)
                   html << "</ul>"
                   html << "</li>"
                 end
-                html << "</ul>" unless skip_wrapper
               when ::Array
-                html << "<ul>" unless skip_wrapper
                 data.each do |item|
                   html << render_html_list(item)
                 end
-                html << "</ul>" unless skip_wrapper
-              when Manifest::Attributes
-                html << "<ul>" unless skip_wrapper
-                data.relevant_manifest.each_pair do |key, value|
-                  if key.to_s == "type"
-                    next
-                  end
-
-                  if key.to_s == "element_type_declarations"
-                    key = :attributes
-                    value = data.attribute_declarations
-                  end
-                  html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
-                  html << "</li>"
-                end
-                html << "</ul>" unless skip_wrapper
               when Manifest::Array
-                html << "<ul>" unless skip_wrapper
                 data.relevant_manifest.each_pair do |key, value|
                   next if key == :element_type_declaration
 
@@ -118,46 +138,38 @@ module Foobara
                   end
                   html << "<li>#{key}"
                   html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
+                  html << render_html_list(value)
                   html << "</ul>"
                   html << "</li>"
                 end
-                html << render_html_list({ element_type: data.element_type }, skip_wrapper: true)
-                html << "</ul>" unless skip_wrapper
+                html << render_html_list({ element_type: data.element_type })
               when Manifest::TypeDeclaration
                 manifest = data.relevant_manifest
 
                 if manifest.is_a?(::Symbol)
-                  html << "<li>"
+                  html << "<li><strong>type: </strong>"
                   html << foobara_reference_link(data.to_type)
                   html << "</li>"
                 else
-                  html << "<ul>" unless skip_wrapper
                   data.relevant_manifest.each_pair do |key, value|
                     if key.to_s == "type"
                       value = root_manifest.lookup_path(key, value)
                     end
                     html << "<li><strong>#{key}: </strong>"
-                    html << render_html_list(value, skip_wrapper: true)
+                    html << render_html_list(value)
                     html << "</li>"
                   end
-                  html << "</ul>" unless skip_wrapper
                 end
               when Manifest::Type
                 html << foobara_reference_link(data)
               when Manifest::Command
-                html << "<li>"
+                html << "<li><strong>COMMAND: </strong>"
                 html << foobara_reference_link(data)
                 html << "</li>"
-              when Manifest::Error
-                html << "<li>"
-                html << "<strong>Error: </strong>"
-                html << foobara_reference_link(data)
-                html << "</li>"
-              when Manifest::PossibleError
-                html << render_html_list(data.error)
               when String
                 html << data
+              when true,false
+                html << data.to_s
               else
                 html << "<li>#{data}</li>"
               end
