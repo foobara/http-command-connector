@@ -70,28 +70,33 @@ module Foobara
               self.manifest = manifest
             end
 
-            def render_html_list(data, skip_wrapper: false)
+            def render_html_list(data)
               html = ""
-
               case data
               when ::Hash
-                html << "<ul>" unless skip_wrapper
+                # html << "<ul>" unless skip_wrapper
+                html << "<ul>"
                 data.each do |key, value|
-                  html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
+                  html << "<li>#{key} -----HASH-----"
+                  # html << "<ul>"
+                  html << render_html_list(value)
+                  # html << "</ul>"
                   html << "</li>"
                 end
-                html << "</ul>" unless skip_wrapper
+                html << "</ul>"
+                # html << "</ul>" unless skip_wrapper
               when ::Array
-                html << "<ul>" unless skip_wrapper
+                # html << "<ul>" unless skip_wrapper
+                # html << "<ul>"
                 data.each do |item|
+                  # html << "----ARRAY_ITEM-----"
                   html << render_html_list(item)
                 end
-                html << "</ul>" unless skip_wrapper
+                # html << "</ul>"
+                # html << "</ul>" unless skip_wrapper
               when Manifest::Attributes
-                html << "<ul>" unless skip_wrapper
+                html << "<ul>"
+                # html << "<ul>" unless skip_wrapper
                 data.relevant_manifest.each_pair do |key, value|
                   if key.to_s == "type"
                     next
@@ -101,58 +106,68 @@ module Foobara
                     key = :attributes
                     value = data.attribute_declarations
                   end
-                  html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
+                  html << "<li>#{key} ----MANI_ATTR------"
+                  # html << "<ul>"
+                  html << render_html_list(value)
+                  # html << "</ul>"
                   html << "</li>"
                 end
-                html << "</ul>" unless skip_wrapper
+                html << "</ul>"
+                # html << "</ul>" unless skip_wrapper
               when Manifest::Array
-                html << "<ul>" unless skip_wrapper
+                html << "<ul>"
+                # html << "<ul>" unless skip_wrapper
                 data.relevant_manifest.each_pair do |key, value|
                   next if key == :element_type_declaration
 
                   if key.to_s == "type"
                     value = root_manifest.lookup_path(key, value)
                   end
-                  html << "<li>#{key}"
-                  html << "<ul>"
+                  html << "<li>#{key} -----ARRAY_MANI------"
+                  # html << "<ul>"
                   html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
+                  # html << "</ul>"
                   html << "</li>"
                 end
                 html << render_html_list({ element_type: data.element_type }, skip_wrapper: true)
-                html << "</ul>" unless skip_wrapper
+                html << "</ul>"
+                # html << "</ul>" unless skip_wrapper
               when Manifest::TypeDeclaration
                 manifest = data.relevant_manifest
-
+                html << "<ul>"
                 if manifest.is_a?(::Symbol)
-                  html << "<li>"
+                  html << "<li> -----TYPE_DEC_SYM------"
                   html << foobara_reference_link(data.to_type)
                   html << "</li>"
                 else
-                  html << "<ul>" unless skip_wrapper
+                  # html << "<ul>"
+                  # html << "<ul>" unless skip_wrapper
                   data.relevant_manifest.each_pair do |key, value|
                     if key.to_s == "type"
                       value = root_manifest.lookup_path(key, value)
                     end
-                    html << "<li>#{key}"
-                    html << "<ul>"
-                    html << render_html_list(value, skip_wrapper: true)
-                    html << "</ul>"
+                    html << "<li>#{key} -----TYPE_DEC_NON_SYM------"
+                    # html << "<ul>"
+                    html << render_html_list(value)
+                    # html << "</ul>"
                     html << "</li>"
                   end
-                  html << "</ul>" unless skip_wrapper
+                  # html << "</ul>"
+                  # html << "</ul>" unless skip_wrapper
                 end
+                html << "</ul>"
               when Manifest::Type, Manifest::Command, Manifest::Error
-                html << "<li>"
+                html << "<ul>"
+                html << "<li> ----FOOBARA_MISC------"
                 html << foobara_reference_link(data)
                 html << "</li>"
+                html << "</ul>"
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
-                html << "<li>#{data}</li>"
+                html << "<ul>"
+                html << "<li>#{data} -----ELSE_BLOCK-----</li>"
+                html << "</ul>"
               end
 
               html
