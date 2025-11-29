@@ -134,15 +134,17 @@ module Foobara
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
-                html << if data == true || data == false || data.nil?
+                html << case data
+                        when Numeric, TrueClass, FalseClass, NilClass
                           data.inspect
-                        elsif data.is_a?(::String)
+                        when ::String
                           data
-                        elsif data.is_a?(::Symbol)
+                        when ::Symbol, ::Time
                           data.to_s
                         else
                           # :nocov:
                           raise "Not sure how to render #{data.class}"
+                          # :nocov:
                         end
               end
 
