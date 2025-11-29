@@ -26,8 +26,13 @@ RSpec.describe Foobara::CommandConnectors::Http do
       possible_error error_klass
       possible_input_error :base, input_error_class
 
-      inputs exponent: :integer,
-             base: :integer
+      inputs do
+        exponent :integer
+        base :integer
+        # Just testing long arrays
+        some_value :integer, one_of: (0..100).to_a
+      end
+
       result :integer
 
       attr_accessor :exponential

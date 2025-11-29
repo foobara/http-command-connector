@@ -155,7 +155,7 @@ module Foobara
 
             def rendered_as_collection?(data)
               if data.is_a?(::Array)
-                data.size > 4 && data.any? { |element| rendered_as_collection?(element) }
+                data.size > 5 || data.any? { |element| rendered_as_collection?(element) }
               elsif data.is_a?(Manifest::TypeDeclaration)
                 !data.relevant_manifest.is_a?(::Symbol)
               else
