@@ -71,22 +71,22 @@ module Foobara
             end
 
             def render_html_list(data)
-              html = ""
+              html = +""
+
+              is_collection = collection?(data)
+
+              html << "<ul>" if is_collection
+
               case data
               when ::Hash
-                html << "<ul>"
                 data.each do |key, value|
-                  html << "<li>#{key}"
-                  html << render_html_list(value)
-                  html << "</li>"
+                  html << render_list_child(value, key)
                 end
-                html << "</ul>"
               when ::Array
                 data.each do |item|
-                  html << render_html_list(item)
+                  html << render_list_child(item)
                 end
               when Manifest::Attributes
-                html << "<ul>"
                 data.relevant_manifest.each_pair do |key, value|
                   if key.to_s == "type"
                     next
@@ -96,58 +96,70 @@ module Foobara
                     key = :attributes
                     value = data.attribute_declarations
                   end
-                  html << "<li>#{key}"
-                  html << render_html_list(value)
-                  html << "</li>"
+
+                  html << render_list_child(value, key)
                 end
-                html << "</ul>"
               when Manifest::Array
-                html << "<ul>"
                 data.relevant_manifest.each_pair do |key, value|
                   next if key == :element_type_declaration
 
                   if key.to_s == "type"
                     value = root_manifest.lookup_path(key, value)
                   end
-                  html << "<li>#{key}"
-                  html << render_html_list(value)
-                  html << "</li>"
+                  html << render_list_child(value, key)
                 end
+
                 html << render_html_list({ element_type: data.element_type })
-                html << "</ul>"
               when Manifest::TypeDeclaration
                 manifest = data.relevant_manifest
-                html << "<ul>"
+
                 if manifest.is_a?(::Symbol)
-                  html << "<li>"
                   html << foobara_reference_link(data.to_type)
-                  html << "</li>"
                 else
                   data.relevant_manifest.each_pair do |key, value|
                     if key.to_s == "type"
                       value = root_manifest.lookup_path(key, value)
                     end
-                    html << "<li>#{key}"
-                    html << render_html_list(value)
-                    html << "</li>"
+
+                    html << render_list_child(value, key)
                   end
                 end
-                html << "</ul>"
               when Manifest::Type, Manifest::Command, Manifest::Error
-                html << "<ul>"
-                html << "<li>"
                 html << foobara_reference_link(data)
-                html << "</li>"
-                html << "</ul>"
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
-                html << "<ul>"
-                html << "<li>#{data}</li>"
-                html << "</ul>"
+                cast_data = if data == true || data == false || data.nil?
+                              data.inspect
+                            elsif data.is_a?(::String)
+                              data
+                            elsif data.is_a?(::Symbol)
+                              data.to_s
+                            else
+                              binding.pry
+                            end
+
+                html << cast_data
               end
 
+              html << "</ul>" if is_collection
+
               html
+            end
+
+            def collection?(data)
+              [
+                ::Hash,
+                ::Array,
+                Manifest::Attributes,
+                Manifest::Array
+              ].any? { |klass| data.is_a?(klass) } || (
+                data.is_a?(Manifest::TypeDeclaration) && !data.relevant_manifest.is_a?(::Symbol)
+              )
+            end
+
+            def render_list_child(child, name = nil)
+              "<li>#{name}\n#{render_html_list(child)}\n</li>"
             end
 
             def foobara_reference_link(manifest)
