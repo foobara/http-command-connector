@@ -71,22 +71,27 @@ module Foobara
             end
 
             def render_html_list(data)
-              html = ""
+              html = +""
+
+              is_rendered_as_a_collection = rendered_as_collection?(data)
+
+              html << "<ul>" if is_rendered_as_a_collection
+
               case data
               when ::Hash
-                html << "<ul>"
                 data.each do |key, value|
-                  html << "<li>#{key}"
-                  html << render_html_list(value)
-                  html << "</li>"
+                  html << render_list_child(value, key)
                 end
-                html << "</ul>"
               when ::Array
-                data.each do |item|
-                  html << render_html_list(item)
+                if is_rendered_as_a_collection
+                  data.each do |item|
+                    html << render_list_child(item)
+                  end
+                else
+                  data = data.map { |item| render_html_list(item) }
+                  html << "[#{data.join(", ")}]"
                 end
               when Manifest::Attributes
-                html << "<ul>"
                 data.relevant_manifest.each_pair do |key, value|
                   if key.to_s == "type"
                     next
@@ -96,58 +101,75 @@ module Foobara
                     key = :attributes
                     value = data.attribute_declarations
                   end
-                  html << "<li>#{key}"
-                  html << render_html_list(value)
-                  html << "</li>"
+
+                  html << render_list_child(value, key)
                 end
-                html << "</ul>"
               when Manifest::Array
-                html << "<ul>"
                 data.relevant_manifest.each_pair do |key, value|
                   next if key == :element_type_declaration
 
                   if key.to_s == "type"
                     value = root_manifest.lookup_path(key, value)
                   end
-                  html << "<li>#{key}"
-                  html << render_html_list(value)
-                  html << "</li>"
+                  html << render_list_child(value, key)
                 end
+
                 html << render_html_list({ element_type: data.element_type })
-                html << "</ul>"
               when Manifest::TypeDeclaration
                 manifest = data.relevant_manifest
-                html << "<ul>"
+
                 if manifest.is_a?(::Symbol)
-                  html << "<li>"
                   html << foobara_reference_link(data.to_type)
-                  html << "</li>"
                 else
                   data.relevant_manifest.each_pair do |key, value|
                     if key.to_s == "type"
                       value = root_manifest.lookup_path(key, value)
                     end
-                    html << "<li>#{key}"
-                    html << render_html_list(value)
-                    html << "</li>"
+
+                    html << render_list_child(value, key)
                   end
                 end
-                html << "</ul>"
               when Manifest::Type, Manifest::Command, Manifest::Error
-                html << "<ul>"
-                html << "<li>"
                 html << foobara_reference_link(data)
-                html << "</li>"
-                html << "</ul>"
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
-                html << "<ul>"
-                html << "<li>#{data}</li>"
-                html << "</ul>"
+                html << case data
+                        when Numeric, TrueClass, FalseClass, NilClass
+                          data.inspect
+                        when ::String
+                          data
+                        when ::Symbol, ::Time
+                          data.to_s
+                        else
+                          # :nocov:
+                          raise "Not sure how to render #{data.class}"
+                          # :nocov:
+                        end
               end
 
+              html << "</ul>" if is_rendered_as_a_collection
+
               html
+            end
+
+            def rendered_as_collection?(data)
+              if data.is_a?(::Array)
+                data.size > 5 || data.any? { |element| rendered_as_collection?(element) }
+              elsif data.is_a?(Manifest::TypeDeclaration)
+                !data.relevant_manifest.is_a?(::Symbol)
+              else
+                [
+                  ::Hash,
+                  Manifest::Attributes,
+                  Manifest::Array
+                ].any? { |klass| data.is_a?(klass) }
+              end
+            end
+
+            def render_list_child(child, label = nil)
+              label = "#{label}:" if label
+              "<li>#{label}\n#{render_html_list(child)}\n</li>"
             end
 
             def foobara_reference_link(manifest)
