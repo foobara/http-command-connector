@@ -70,28 +70,23 @@ module Foobara
               self.manifest = manifest
             end
 
-            def render_html_list(data, skip_wrapper: false)
+            def render_html_list(data)
               html = ""
-
               case data
               when ::Hash
-                html << "<ul>" unless skip_wrapper
+                html << "<ul>"
                 data.each do |key, value|
                   html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
+                  html << render_html_list(value)
                   html << "</li>"
                 end
-                html << "</ul>" unless skip_wrapper
+                html << "</ul>"
               when ::Array
-                html << "<ul>" unless skip_wrapper
                 data.each do |item|
                   html << render_html_list(item)
                 end
-                html << "</ul>" unless skip_wrapper
               when Manifest::Attributes
-                html << "<ul>" unless skip_wrapper
+                html << "<ul>"
                 data.relevant_manifest.each_pair do |key, value|
                   if key.to_s == "type"
                     next
@@ -102,14 +97,12 @@ module Foobara
                     value = data.attribute_declarations
                   end
                   html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
+                  html << render_html_list(value)
                   html << "</li>"
                 end
-                html << "</ul>" unless skip_wrapper
+                html << "</ul>"
               when Manifest::Array
-                html << "<ul>" unless skip_wrapper
+                html << "<ul>"
                 data.relevant_manifest.each_pair do |key, value|
                   next if key == :element_type_declaration
 
@@ -117,42 +110,41 @@ module Foobara
                     value = root_manifest.lookup_path(key, value)
                   end
                   html << "<li>#{key}"
-                  html << "<ul>"
-                  html << render_html_list(value, skip_wrapper: true)
-                  html << "</ul>"
+                  html << render_html_list(value)
                   html << "</li>"
                 end
-                html << render_html_list({ element_type: data.element_type }, skip_wrapper: true)
-                html << "</ul>" unless skip_wrapper
+                html << render_html_list({ element_type: data.element_type })
+                html << "</ul>"
               when Manifest::TypeDeclaration
                 manifest = data.relevant_manifest
-
+                html << "<ul>"
                 if manifest.is_a?(::Symbol)
                   html << "<li>"
                   html << foobara_reference_link(data.to_type)
                   html << "</li>"
                 else
-                  html << "<ul>" unless skip_wrapper
                   data.relevant_manifest.each_pair do |key, value|
                     if key.to_s == "type"
                       value = root_manifest.lookup_path(key, value)
                     end
                     html << "<li>#{key}"
-                    html << "<ul>"
-                    html << render_html_list(value, skip_wrapper: true)
-                    html << "</ul>"
+                    html << render_html_list(value)
                     html << "</li>"
                   end
-                  html << "</ul>" unless skip_wrapper
                 end
+                html << "</ul>"
               when Manifest::Type, Manifest::Command, Manifest::Error
+                html << "<ul>"
                 html << "<li>"
                 html << foobara_reference_link(data)
                 html << "</li>"
+                html << "</ul>"
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
+                html << "<ul>"
                 html << "<li>#{data}</li>"
+                html << "</ul>"
               end
 
               html
