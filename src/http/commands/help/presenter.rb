@@ -73,9 +73,9 @@ module Foobara
             def render_html_list(data)
               html = +""
 
-              is_collection = collection?(data)
+              is_rendered_as_a_collection = rendered_as_collection?(data)
 
-              html << "<ul>" if is_collection
+              html << "<ul>" if is_rendered_as_a_collection
 
               case data
               when ::Hash
@@ -83,8 +83,13 @@ module Foobara
                   html << render_list_child(value, key)
                 end
               when ::Array
-                data.each do |item|
-                  html << render_list_child(item)
+                if is_rendered_as_a_collection
+                  data.each do |item|
+                    html << render_list_child(item)
+                  end
+                else
+                  data = data.map { |item| render_html_list(item) }
+                  html << "[#{data.join(", ")}]"
                 end
               when Manifest::Attributes
                 data.relevant_manifest.each_pair do |key, value|
@@ -129,36 +134,42 @@ module Foobara
               when Manifest::PossibleError
                 html << render_html_list(data.error)
               else
-                cast_data = if data == true || data == false || data.nil?
-                              data.inspect
-                            elsif data.is_a?(::String)
-                              data
-                            elsif data.is_a?(::Symbol)
-                              data.to_s
-                            else
-                              binding.pry
-                            end
-
-                html << cast_data
+                html << if data == true || data == false || data.nil?
+                          data.inspect
+                        elsif data.is_a?(::String)
+                          data
+                        elsif data.is_a?(::Symbol)
+                          data.to_s
+                        else
+                          # :nocov:
+                          raise "Not sure how to render #{data.class}"
+                        end
               end
 
-              html << "</ul>" if is_collection
+              html << "</ul>" if is_rendered_as_a_collection
 
               html
             end
 
-            def collection?(data)
-              [
-                ::Hash,
-                ::Array,
-                Manifest::Attributes,
-                Manifest::Array
-              ].any? { |klass| data.is_a?(klass) } || (
-                data.is_a?(Manifest::TypeDeclaration) && !data.relevant_manifest.is_a?(::Symbol)
-              )
+            def rendered_as_collection?(data)
+              if data.is_a?(::Array)
+                data.size > 4 && data.any? { |element| rendered_as_collection?(element) }
+              elsif data.is_a?(Manifest::TypeDeclaration)
+                !data.relevant_manifest.is_a?(::Symbol)
+              else
+                [
+                  ::Hash,
+                  Manifest::Attributes,
+                  Manifest::Array
+                ].any? { |klass| data.is_a?(klass) }
+              end
             end
 
             def render_list_child(child, name = nil)
+              if name
+                name = "#{name}:"
+              end
+
               "<li>#{name}\n#{render_html_list(child)}\n</li>"
             end
 
