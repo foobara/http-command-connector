@@ -1,3 +1,9 @@
+## [1.1.2] - 2025-12-18
+
+- Fix bug causing commands to cram together on help page
+- Refactor help rendering
+- Make strings frozen-string compatible
+
 ## [1.1.1] - 2025-08-25
 
 - Add support for including processors
