@@ -1,21 +1,13 @@
-RSpec.describe Foobara::CommandConnectors::Http::SetInputToProcResult do
+RSpec.describe Foobara::CommandConnectors::Http::Desugarizers::SetInputToProcResult do
   let(:command_class) do
     stub_class(:SomeCommand, Foobara::Command) do
       inputs foo: :string, bar: :string
       result :duck
-
-      def execute
-        inputs
-      end
+      def execute = inputs
     end
   end
 
   let(:some_foo) { "Fooooooo" }
-
-  let(:request_mutator) do
-    foo = some_foo
-    described_class.for(:foo) { foo }
-  end
 
   let(:command_connector) { Foobara::CommandConnectors::Http.new }
   let(:response) { command_connector.run(path:, query_string:) }
@@ -23,7 +15,8 @@ RSpec.describe Foobara::CommandConnectors::Http::SetInputToProcResult do
   let(:path) { "/run/#{command_class.full_command_name}" }
 
   before do
-    command_connector.connect(command_class, request_mutators: request_mutator)
+    foo = some_foo
+    command_connector.connect(command_class, request: { set: { foo: -> { foo } } })
   end
 
   it "sets the input to the expected value" do

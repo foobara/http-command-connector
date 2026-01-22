@@ -1,3 +1,7 @@
+## [1.1.3] - 2026-01-21
+
+- Add `set:` request mutator sugar
+
 ## [1.1.2] - 2025-12-18
 
 - Fix bug causing commands to cram together on help page

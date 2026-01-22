@@ -3,6 +3,7 @@ module Foobara
     class Http < CommandConnector
       # TODO: We don't really want to mutate the request. We just need access to the authenticated user.
       # consider changing inputs transformer to have access to the command/request somehow
+      # TODO: what does this have to do with HTTP? Shouldn't this be a generic mutator for all connectors?
       class SetInputToProcResult < RequestMutator
         class << self
           attr_accessor :attribute_name, :input_value_proc
