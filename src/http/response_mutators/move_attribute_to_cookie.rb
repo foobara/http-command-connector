@@ -30,7 +30,7 @@ module Foobara
 
         def mutate(response)
           cookie_value = response.body.delete(attribute_name)
-          response.add_cookie(cookie_name, cookie_value, cookie_opts)
+          response.add_cookie(cookie_name, cookie_value, **cookie_opts)
         end
 
         def attribute_name

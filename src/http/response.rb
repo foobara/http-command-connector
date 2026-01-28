@@ -16,7 +16,7 @@ module Foobara
           @cookies ||= []
         end
 
-        def add_cookie(cookie_name, cookie_value, cookie_opts)
+        def add_cookie(cookie_name, cookie_value, **cookie_opts)
           cookies << Cookie.new(cookie_name, cookie_value, **cookie_opts)
         end
 

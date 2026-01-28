@@ -1,3 +1,7 @@
+## [1.1.4] - 2026-01-27
+
+- Make cookie options optional
+
 ## [1.1.3] - 2026-01-21
 
 - Add `set:` request mutator sugar
