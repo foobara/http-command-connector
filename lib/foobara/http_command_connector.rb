@@ -8,6 +8,7 @@ module Foobara
     class << self
       def install!
         CommandConnector.add_desugarizer CommandConnectors::Http::Desugarizers::SetInputToProcResult
+        CommandConnector.add_desugarizer CommandConnectors::Http::Desugarizers::DefaultInputs
       end
     end
   end

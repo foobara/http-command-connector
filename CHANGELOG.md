@@ -1,3 +1,7 @@
+## [1.1.5] - 2026-02-13
+
+- Add a DefaultInputs request mutator
+
 ## [1.1.4] - 2026-01-27
 
 - Make cookie options optional
